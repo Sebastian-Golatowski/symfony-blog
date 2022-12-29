@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="item">
+    <div class="title"><h1>{{post.title}}</h1></div>
+    <img src="{{post.img}}" width="600" height="400">
+        <div class="article">
+            <div class="text">{{post.text}}</div>
+            <h2><em>~ {{post.user.username}} ~</em></h2>
+            <button class="edit" onclick="location.href='#'" type="button">edit</button>
+            <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+        </div>
+
+</div>
+{% endblock %}
