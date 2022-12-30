@@ -1,20 +1,20 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-
-        {% for post in posts %}
-        <div class="post">
-                <div class="photo"><img src="{{post.img}}" width="350" height="250"></div>
-                <div class="content">
-                        <div class="title"><h1>{{post.title}}</h1></div>
-                        <div class="snipet"><p>{{post.text}}</p></div>
-                        <div class="buttons">
-                                <h4><em>~ {{post.user.username}} ~</em></h4>
-                                <button class="more" onclick="location.href='/blog/{{post.id}}'" type="button">read more</button>
-                                <button class="edit" onclick="location.href='#'" type="button">edit</button>
-                                <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+                {% for post in posts %}
+                <div class="post">
+                        <div class="photo"><img src="{{post.img}}" width="350" height="250"></div>
+                        <div class="content">
+                                <div class="title"><h1>{{post.title}}</h1></div>
+                                <div class="snipet"><p>{{post.text}}</p></div>
+                                <div class="buttons">
+                                        <h4><em>~ {{post.user.username}} ~</em></h4>
+                                        <button class="more" onclick="location.href='/blog/{{post.id}}'" type="button">read more</button>
+                                        <button class="edit" onclick="location.href='/blog/edit/{{post.id}}/index'" type="button">edit</button>
+                                        <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+                                </div>
                         </div>
-                </div>
-        </div>         
-        {% endfor %}        
+                </div>         
+                {% endfor %}
+        {{ knp_pagination_render(posts) }}        
 {% endblock %}

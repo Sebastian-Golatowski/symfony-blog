@@ -1,0 +1,18 @@
+{% extends "./base.html.twig" %}
+
+{% block body %}
+<div class="">
+    <h1 class="formh1">
+        Create Movie
+    </h1>
+        {{form_start(form)}}
+            
+            {{form_widget(form)}}
+            <button    
+                type="submit"
+                class="but">
+                Submit Post
+            </button>
+        {{form_end(form)}}
+</div>
+{% endblock %}
