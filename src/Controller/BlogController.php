@@ -64,7 +64,7 @@ class BlogController extends AbstractController
     #[Route('/create', name: '_create')]
     public function create(Request $req): Response
     {
-        $user = $this->userRepository->find(6);
+        $user = $this->userRepository->find(11);
         $post = new Post();
         $form = $this->createForm(PostFormType::class,$post,['required'=>true]);
         
@@ -102,7 +102,7 @@ class BlogController extends AbstractController
         $post = $this->postRepository->find($id);
         $form = $this->createForm(PostFormType::class, $post,['required'=>false]);
 
-        $user = $this->userRepository->find(6);
+        $user = $this->userRepository->find(11);
 
         $form->handleRequest($req);
 
@@ -124,11 +124,13 @@ class BlogController extends AbstractController
                 } catch (FileException $e){
                     return new Response($e ->getMessage());
                 }
+
+                $image = '/images/'.$newName;
             }
             
             $post->setTitle($form->get('title')->getData());
             $post->setText($form->get('text')->getData());
-            $post->setImg('/images/'.$newName);
+            $post->setImg($image);
             $post->setUser($user);
             
             $this->em->persist($post);
