@@ -13,7 +13,7 @@ class AppFixtures extends Fixture
     {
         $user = new User();
         $user-> setUsername('user1');
-        $user-> setRoles(["ROLE_USER"]);
+        $user-> setRoles(["ROLE_ADMIN"]);
         $user->setPassword('$2y$13$dprriinn.plWbeHriIBZoe2MarPdECDrwzdaQuQ2zwnvGBPOCUnwa'); //123
         $manager->persist($user);
 
@@ -22,6 +22,12 @@ class AppFixtures extends Fixture
         $user2-> setRoles(["ROLE_USER"]);
         $user2->setPassword('$2y$13$dprriinn.plWbeHriIBZoe2MarPdECDrwzdaQuQ2zwnvGBPOCUnwa'); //123
         $manager->persist($user2);
+
+        $user3 = new User();
+        $user3-> setUsername('user3');
+        $user3-> setRoles(["ROLE_USER"]);
+        $user3->setPassword('$2y$13$dprriinn.plWbeHriIBZoe2MarPdECDrwzdaQuQ2zwnvGBPOCUnwa'); //123
+        $manager->persist($user3);
 
         $this->addReference('user',$user);
         $this->addReference('user2',$user2);

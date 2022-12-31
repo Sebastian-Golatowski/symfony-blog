@@ -16,9 +16,14 @@
         <header>
             <a href="/blog"><h1>Generic Blog Name</h1></a>
             <nav>
-                <a href="/blog/create">Create</a>
-                <a href="#">Products</a>
-                <a href="#">Contact</a>
+                {% if app.user %}
+                    <a href="/blog/create">Create</a>
+                    <a href="/logout">logout</a>
+                    <a href="/#">My ({{app.user.username}}) account</a>
+                {% else %}                
+                    <a href="/login">login</a>
+                    <a href="/register">register</a>
+                {% endif %}
             </nav>
         </header>
         {% block body %}{% endblock %}

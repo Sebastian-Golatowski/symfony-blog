@@ -33,7 +33,7 @@ class BlogController extends AbstractController
     #[Route('/', name: '_index')]
     public function index(Request $req): Response
     {
-        $page = $req->query->getInt('page', 1);
+         $page = $req->query->getInt('page', 1);
         $posts = $this->postRepository->findBy([],['id'=>'DESC']);
 
         // Paginate the articles
@@ -47,19 +47,24 @@ class BlogController extends AbstractController
         return $this->render('blog/index.html.twig', [
             'posts' => $paginatedPosts,
         ]);
+        // dd($posts);
     }
 
     #[Route('/delete/{id}', name: '_delete')]
     public function delete($id): Response
     {
+        $user = $this->getUser();
         $post = $this->postRepository->find($id);
-        $fs = new Filesystem();
-                $fs->remove($this->
+        if ($user->getId() == $post->getUser()->getId() or $this->isGranted('ROLE_ADMIN')) {
+            $fs = new Filesystem();
+            $fs->remove($this->
                 getParameter('kernel.project_dir').'/public'.$post->getImg());
-        $this->em->remove($post);
-        $this->em->flush();
+            $this->em->remove($post);
+            $this->em->flush();
+        }
         
         return $this->redirectToRoute("blog_index");
+        
     }
     #[Route('/create', name: '_create')]
     public function create(Request $req): Response
@@ -100,52 +105,56 @@ class BlogController extends AbstractController
     #[Route('/edit/{id}/{origin}',name:'_edit')]
     public function edit($id, $origin,Request $req){
         $post = $this->postRepository->find($id);
-        $form = $this->createForm(PostFormType::class, $post,['required'=>false]);
+        
+        $user = $this->getUser();
 
-        $user = $this->userRepository->find(11);
+        if ($user->getId() == $post->getUser()->getId()) {
+            $form = $this->createForm(PostFormType::class, $post,['required'=>false]);
+            $form->handleRequest($req);
 
-        $form->handleRequest($req);
+            if($form->isSubmitted() && $form->isValid()){
 
-        if($form->isSubmitted() && $form->isValid()){
+                $image = $post -> getImg();
+                $imageForm = $form->get('img')->getData();
+                if($imageForm){
 
-            $image = $post -> getImg();
-            $imageForm = $form->get('img')->getData();
-            if($imageForm){
+                    $fs = new Filesystem();
+                    $fs->remove($this->
+                    getParameter('kernel.project_dir').'/public'.$image);
+                    
+                    $image = $imageForm;
 
-                $fs = new Filesystem();
-                $fs->remove($this->
-                getParameter('kernel.project_dir').'/public'.$image);
-                
-                $image = $imageForm;
+                    $newName = uniqid().'.'.$image->guessExtension();
+                    try{
+                        $image->move($this->getParameter('kernel.project_dir').'/public/images', $newName);
+                    } catch (FileException $e){
+                        return new Response($e ->getMessage());
+                    }
 
-                $newName = uniqid().'.'.$image->guessExtension();
-                try{
-                    $image->move($this->getParameter('kernel.project_dir').'/public/images', $newName);
-                } catch (FileException $e){
-                    return new Response($e ->getMessage());
+                    $image = '/images/'.$newName;
                 }
+                
+                $post->setTitle($form->get('title')->getData());
+                $post->setText($form->get('text')->getData());
+                $post->setImg($image);
+                $post->setUser($user);
+                
+                $this->em->persist($post);
+                $this->em->flush();
 
-                $image = '/images/'.$newName;
+
+                
+                return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
+
             }
-            
-            $post->setTitle($form->get('title')->getData());
-            $post->setText($form->get('text')->getData());
-            $post->setImg($image);
-            $post->setUser($user);
-            
-            $this->em->persist($post);
-            $this->em->flush();
 
-
-            
-            return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
-
+            return $this->render('blog/edit.html.twig',[
+                'form'=>$form->createView(),
+                'post'=>$post,
+            ]);
         }
 
-        return $this->render('blog/edit.html.twig',[
-            'form'=>$form->createView(),
-            'post'=>$post,
-        ]);
+        return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
 
     }
     

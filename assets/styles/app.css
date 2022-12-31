@@ -7,6 +7,11 @@ header{
     border-bottom: 2px black solid;
     background-color: gray;
     color: white;
+    background-color: grey;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 footer{
     border-top: 2px black solid;
@@ -110,8 +115,12 @@ footer{
 header a{
     text-decoration: none;
     color: white;
+    margin-left: 5px;
+    margin-right: 5px;
 }
-
+nav{
+    display: inline;
+}
 .pagination {
     display: inline-block;
     position: fixed;
@@ -198,3 +207,4 @@ input[type="file"] {
 .imgForm{
     margin-left: 10px;
 }
+

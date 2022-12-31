@@ -7,9 +7,16 @@
         <div class="article">
             <div class="text">{{post.text}}</div>
             <h2><em>~ {{post.user.username}} ~</em></h2>
-            <button class="edit" onclick="location.href='/blog/edit/{{post.id}}/show'" type="button">edit</button>
-            <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+            {% if app.user %}
+                {% if app.user.id == post.user.id %}
+                    <button class="edit" onclick="location.href='/blog/edit/{{post.id}}/index'" type="button">edit</button>
+                    <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+                {% else %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+                    {% endif %}
+                {% endif %}  
+            {% endif %}
         </div>
-
 </div>
 {% endblock %}
