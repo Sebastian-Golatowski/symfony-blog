@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Form\PostFormType;
@@ -33,7 +32,7 @@ class BlogController extends AbstractController
     #[Route('/', name: '_index')]
     public function index(Request $req): Response
     {
-         $page = $req->query->getInt('page', 1);
+        $page = $req->query->getInt('page', 1);
         $posts = $this->postRepository->findBy([],['id'=>'DESC']);
 
         // Paginate the articles

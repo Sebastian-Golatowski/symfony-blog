@@ -44,6 +44,7 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+    .addEntry('js/bootstrap', 'bootstrap/dist/js/bootstrap.js')
 
     // configure Babel
     // .configureBabel((config) => {

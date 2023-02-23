@@ -11,14 +11,17 @@
                                         <h4><em>~ {{post.user.username}} ~</em></h4>
                                         <button class="more" onclick="location.href='/blog/{{post.id}}'" type="button">read more</button>
                                         {% if app.user %}
+                                                
                                                 {% if app.user.id == post.user.id %}
                                                         <button class="edit" onclick="location.href='/blog/edit/{{post.id}}/index'" type="button">edit</button>
                                                         <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
+                                                        
                                                 {% else %}
                                                         {% if is_granted('ROLE_ADMIN') %}
                                                                 <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
                                                         {% endif %}
-                                                {% endif %}       
+                                                {% endif %}     
+                                                <button class="report" onclick="location.href='/blog/report/{{post.id}}'" type="button">report</button>  
                                         {% endif %}
                                 </div>
                         </div>

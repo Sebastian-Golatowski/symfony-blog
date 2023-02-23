@@ -8,6 +8,7 @@
             <div class="text">{{post.text}}</div>
             <h2><em>~ {{post.user.username}} ~</em></h2>
             {% if app.user %}
+                <button class="report" onclick="location.href='/blog/report/{{post.id}}'" type="button">report</button>
                 {% if app.user.id == post.user.id %}
                     <button class="edit" onclick="location.href='/blog/edit/{{post.id}}/index'" type="button">edit</button>
                     <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>

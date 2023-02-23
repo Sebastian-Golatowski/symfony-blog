@@ -105,6 +105,13 @@ footer{
     border-radius: 8px;
 }
 
+.report{
+    color: white;
+    background-color: black;
+    border: 1px black solid;
+    border-radius: 8px;
+}
+
 .more{
     color: white;
     background-color: green;
@@ -208,3 +215,11 @@ input[type="file"] {
     margin-left: 10px;
 }
 
+.logReg{
+    width: 40%;
+    text-align: left;
+}
+.logReg .btn{
+    margin-top: 5px;
+    width: 50%
+}

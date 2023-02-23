@@ -2,16 +2,22 @@
 
 {% block title %}Register{% endblock %}
 
+{% block bootsrtap %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% endblock %}
+
 {% block body %}
-    <h1>Register</h1>
+    <div class="logReg">
+        <h1 class="h3 mb-3 font-weight-normal">Register</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.username) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <button type="submit" class="btn btn-lg btn-primary">Register</button>
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}
