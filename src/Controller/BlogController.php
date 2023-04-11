@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Form\PostFormType;
 use App\Entity\Post;
+use App\Entity\Report;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,7 @@ class BlogController extends AbstractController
 {
     private $postRepository;
     private $userRepository;
+    private $reportRepository;
     private $paginator;
     private $em;
 
@@ -26,6 +28,7 @@ class BlogController extends AbstractController
     {   
         $this->postRepository = $em->getRepository(Post::class);
         $this->userRepository = $em->getRepository(User::class);
+        $this->reportRepository = $em->getRepository(Report::class);
         $this->paginator = $paginator;
         $this->em = $em;
     }
@@ -157,15 +160,36 @@ class BlogController extends AbstractController
         return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
 
     }
-
+    // #[Route('/test', name: '_test')]
+    // public function test(): Response
+    // {
+    //     $reports = $this->reportRepository->isAlreadyReported(46, 45);
+    //     dd(sizeof($reports));
+    // }
+    
     #[Route('/report', name: 'report')]
     public function report(Request $req): Response
     {
         $payload = json_decode($req->getContent(), false);
-        $userId = $payload->user;
+        // $userId = $payload->user;
         $postId = $payload->post;
 
-        return $this->json($userId." ".$postId, 200);
+        $user = $this->getUser();
+        $post = $this->postRepository->find($postId);
+
+        $reports = $this->reportRepository->isAlreadyReported($user->getId(), $postId);
+
+        if(sizeof($reports) == 0){
+            $newReport = new Report();
+            $newReport->setPost($post);
+            $newReport->setUser($user);
+            $this->em->persist($newReport);
+            $this->em->flush();
+
+            return $this->json("good",200);
+        }
+
+        return $this->json("already reported", 200);
     }
     
     #[Route('/{id}', name: '_show')]

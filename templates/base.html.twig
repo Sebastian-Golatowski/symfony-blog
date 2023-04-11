@@ -25,10 +25,13 @@
                 method: 'POST',
                 body: JSON.stringify({post: postId, user: userId})
                 }).then(response => {
-                if(response.ok){
+                if(response.text =="good"){
                     return alert("ok")
-                alert('nie')
-                }})
+                }
+                elseif(response.text=="already reported"){
+                    return alert("nie")
+                }
+                })
             }
                 
         </script>
