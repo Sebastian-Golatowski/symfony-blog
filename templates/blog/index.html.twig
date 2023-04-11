@@ -20,8 +20,8 @@
                                                         {% if is_granted('ROLE_ADMIN') %}
                                                                 <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
                                                         {% endif %}
-                                                {% endif %}     
-                                                <button class="report" onclick="location.href='/blog/report/{{post.id}}'" type="button">report</button>  
+                                                        <button class="report" onclick="reportPost( {{post.id}},{{app.user.id}})" type="button">report</button> 
+                                                {% endif %}      
                                         {% endif %}
                                 </div>
                         </div>

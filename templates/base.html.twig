@@ -19,16 +19,29 @@
         {% endblock %}
     </head>
     <body>
-        <header>
-            <a href="/blog"><h1>Generic Blog Name</h1></a>
+        <script>
+            const reportPost = (postId, userId)=>{
+                fetch('http://127.0.0.1:8000/blog/report', {
+                method: 'POST',
+                body: JSON.stringify({post: postId, user: userId})
+                }).then(response => {
+                if(response.ok){
+                    return alert("ok")
+                alert('nie')
+                }})
+            }
+                
+        </script>
+        <header >
+            <a class="text-decoration-none text-white" href="/blog"><h1>Generic Blog Name</h1></a>
             <nav>
                 {% if app.user %}
-                    <a href="/blog/create">Create</a>
-                    <a href="/logout">logout</a>
-                    <a href="/#">My ({{app.user.username}}) account</a>
+                    <a class="text-decoration-none text-white"  href="/blog/create">Create</a>
+                    <a class="text-decoration-none text-white"  href="/logout">logout</a>
+                    <a class="text-decoration-none text-white"  href="/#">My ({{app.user.username}}) account</a>
                 {% else %}                
-                    <a href="/login">login</a>
-                    <a href="/register">register</a>
+                    <a class="text-decoration-none text-white"  href="/login">login</a>
+                    <a class="text-decoration-none text-white"  href="/register">register</a>
                 {% endif %}
             </nav>
         </header>

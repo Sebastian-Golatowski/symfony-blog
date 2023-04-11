@@ -13,6 +13,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
+
 #[Route('/blog', name: 'blog')]
 class BlogController extends AbstractController
 {
@@ -68,7 +69,7 @@ class BlogController extends AbstractController
     #[Route('/create', name: '_create')]
     public function create(Request $req): Response
     {
-        $user = $this->userRepository->find(11);
+        $user = $this->getUser();
         $post = new Post();
         $form = $this->createForm(PostFormType::class,$post,['required'=>true]);
         
@@ -156,6 +157,16 @@ class BlogController extends AbstractController
         return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
 
     }
+
+    #[Route('/report', name: 'report')]
+    public function report(Request $req): Response
+    {
+        $payload = json_decode($req->getContent(), false);
+        $userId = $payload->user;
+        $postId = $payload->post;
+
+        return $this->json($userId." ".$postId, 200);
+    }
     
     #[Route('/{id}', name: '_show')]
     public function show($id): Response
@@ -164,5 +175,6 @@ class BlogController extends AbstractController
         return $this->render('blog/show.html.twig',['post'=>$post]);
     }
 
+    
 
 }
