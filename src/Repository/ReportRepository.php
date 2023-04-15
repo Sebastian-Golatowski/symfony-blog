@@ -46,11 +46,21 @@ class ReportRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('e');
 
-        $qb->where('e.post = :postId')
-        ->setParameter('postId', $postId)
-        ->andWhere('e.user = :userId')
-        ->setParameter('userId', $userId);
+        $qb ->where('e.post = :postId')
+            ->setParameter('postId', $postId)
+            ->andWhere('e.user = :userId')
+            ->setParameter('userId', $userId);
 
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countReports()
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb ->select('IDENTITY(r.post) AS postId, COUNT(r) AS reportCount')
+            ->groupBy('postId')
+            ->having('reportCount >= 1');
+    
         return $qb->getQuery()->getResult();
     }
 //    public function findByExampleField($value): array

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+    {{form_start(form)}}
+            {{form_widget(form)}}
+            <button    
+                type="submit"
+                class="but">
+                search
+            </button>
+        {{form_end(form)}}
+    {% if users|length != 0 %}
+        <table>
+            <tr>
+                <th>User Name</th>
+                <th>is Admin?</th>
+                <th>options</th>
+            </tr>
+        {% for user in users %} 
+            <tr>
+                <td>{{user.username}}</td>
+                <td>
+                    {% if "ROLE_ADMIN" in user.roles %}
+                        YES
+                    {% else %}
+                        NO
+                    {% endif %}
+                </td>
+                <td>under construction</td>
+            </tr>
+        {% endfor %}
+         </table>
+        {{ knp_pagination_render(users) }} 
+    {% else %}
+        <h1>There is no user with name containing "{{userName}}"</h1>
+    {% endif %}
+{% endblock %}

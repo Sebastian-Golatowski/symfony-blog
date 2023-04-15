@@ -50,7 +50,6 @@ class BlogController extends AbstractController
         return $this->render('blog/index.html.twig', [
             'posts' => $paginatedPosts,
         ]);
-        // dd($posts);
     }
 
     #[Route('/delete/{id}', name: '_delete')]
@@ -160,12 +159,12 @@ class BlogController extends AbstractController
         return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
 
     }
-    // #[Route('/test', name: '_test')]
-    // public function test(): Response
-    // {
-    //     $reports = $this->reportRepository->isAlreadyReported(46, 45);
-    //     dd(sizeof($reports));
-    // }
+    #[Route('/test', name: '_test')]
+    public function test(): Response
+    {
+        $reports = $this->reportRepository->countReports();
+        dd($reports);
+    }
     
     #[Route('/report', name: 'report')]
     public function report(Request $req): Response
