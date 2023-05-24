@@ -10,6 +10,7 @@ use App\Form\AdminUsersType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,19 +52,76 @@ class AdminController extends AbstractController
             $userName="";
         }
 
-        // Paginate the articles
+        
         $paginatedUsers = $this->paginator->paginate(
         $users,
         $page, // Current page number
         $perPage // Number of items per page
         );
 
-        // Render the template, passing the paginated articles as an argument
         return $this->render('admin/index.html.twig', [
             'users' => $paginatedUsers,
             'form' => $form->createView(),
             'userName' => $userName
         ]);
 
+    }
+
+    #[Route('/reports', name:'reports')]
+    public function showReports(Request $req):Response
+    {
+
+        $reports = $this->reportRepository->countReports(2);
+        
+        $page = $req->query->getInt('page', 1);
+        $paginatedReports = $this->paginator->paginate(
+            $reports,
+            $page, // Current page number
+            20 // Number of items per page
+            );
+        return $this->render('admin/reports.html.twig',[
+            'reports' => $paginatedReports
+        ]);
+    }
+
+    #[Route('/deleteAccount', name:"deleteAccount",methods: ['POST'])]
+    public function deleteAccount(Request $req): JsonResponse
+    {
+        $payload = json_decode($req->getContent(), false);
+        $userId = $payload->user;
+
+        if ($this->isGranted("ROLE_ADMIN")) {
+            $user = $this->userRepository->find($userId);
+            
+
+            $this->userRepository->remove($user, true);
+
+            return $this->json("user deleted",200);
+        }
+        
+        return $this->json("u cant do that",201);
+    } 
+
+    #[Route('/changeStatus', name:"changeStatus",methods: ['POST'])]
+    public function changeStatus(Request $req): JsonResponse
+    {
+        $payload = json_decode($req->getContent(), false);
+        $userId = $payload->user;
+        $toWhat = $payload->towhat;
+
+        if ($this->isGranted("ROLE_ADMIN")) {
+            $user = $this->userRepository->find($userId);
+            if ($user) {
+                if($toWhat == 'admin'){
+                    $user->setRoles(["ROLE_ADMIN"]);
+                    $this->em->flush();
+                }
+                elseif($toWhat == 'user'){
+                    $user->setRoles([]);
+                    $this->em->flush();
+                }
+            }
+            return $this->json("ok", 200);
+        }
     }
 }

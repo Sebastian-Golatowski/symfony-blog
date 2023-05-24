@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\Post;
+use App\Entity\Report;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -19,18 +20,19 @@ class AppFixtures extends Fixture
 
         $user2 = new User();
         $user2-> setUsername('user2');
-        $user2-> setRoles(["ROLE_USER"]);
+        $user2-> setRoles([]);
         $user2->setPassword('$2y$13$dprriinn.plWbeHriIBZoe2MarPdECDrwzdaQuQ2zwnvGBPOCUnwa'); //123
         $manager->persist($user2);
 
         $user3 = new User();
         $user3-> setUsername('user3');
-        $user3-> setRoles(["ROLE_USER"]);
+        $user3-> setRoles([]);
         $user3->setPassword('$2y$13$dprriinn.plWbeHriIBZoe2MarPdECDrwzdaQuQ2zwnvGBPOCUnwa'); //123
         $manager->persist($user3);
 
         $this->addReference('user',$user);
         $this->addReference('user2',$user2);
+        $this->addReference('user3',$user3);
 
         $post = new Post();
         $post-> setTitle('post1');
@@ -59,6 +61,36 @@ class AppFixtures extends Fixture
         $post4->setImg('https://cdn.pixabay.com/photo/2014/08/16/18/17/book-419589_960_720.jpg');
         $post4->setUser($this->getReference('user'));
         $manager->persist($post4);
+
+        $this->addReference('post',$post);
+        $this->addReference('post2',$post2);
+        $this->addReference('post3',$post3);
+        $this->addReference('post4',$post4);
+
+        $report = new Report();
+        $report -> setUser($this->getReference('user3'));
+        $report -> setPost($this->getReference('post'));
+        $manager -> persist($report);
+
+        $report2 = new Report();
+        $report2 -> setUser($this->getReference('user3'));
+        $report2 -> setPost($this->getReference('post2'));
+        $manager -> persist($report2);
+
+        $report3 = new Report();
+        $report3 -> setUser($this->getReference('user3'));
+        $report3 -> setPost($this->getReference('post3'));
+        $manager -> persist($report3);
+
+        $report3 = new Report();
+        $report3 -> setUser($this->getReference('user3'));
+        $report3 -> setPost($this->getReference('post4'));
+        $manager -> persist($report3);
+
+        $report4 = new Report();
+        $report4 -> setUser($this->getReference('user2'));
+        $report4 -> setPost($this->getReference('post'));
+        $manager -> persist($report4);
 
         $manager->flush();
     }

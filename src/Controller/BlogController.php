@@ -13,9 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-
-#[Route('/blog', name: 'blog')]
+#[Route('/blog', name: 'blog_')]
 class BlogController extends AbstractController
 {
     private $postRepository;
@@ -33,7 +33,7 @@ class BlogController extends AbstractController
         $this->em = $em;
     }
     
-    #[Route('/', name: '_index')]
+    #[Route('/', name: 'index')]
     public function index(Request $req): Response
     {
         $page = $req->query->getInt('page', 1);
@@ -52,7 +52,7 @@ class BlogController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: '_delete')]
+    #[Route('/delete/{id}', name: 'delete')]
     public function delete($id): Response
     {
         $user = $this->getUser();
@@ -68,7 +68,7 @@ class BlogController extends AbstractController
         return $this->redirectToRoute("blog_index");
         
     }
-    #[Route('/create', name: '_create')]
+    #[Route('/create', name: 'create')]
     public function create(Request $req): Response
     {
         $user = $this->getUser();
@@ -104,7 +104,7 @@ class BlogController extends AbstractController
         ]);
         
     }
-    #[Route('/edit/{id}/{origin}',name:'_edit')]
+    #[Route('/edit/{id}/{origin}',name:'edit')]
     public function edit($id, $origin,Request $req){
         $post = $this->postRepository->find($id);
         
@@ -159,14 +159,14 @@ class BlogController extends AbstractController
         return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
 
     }
-    #[Route('/test', name: '_test')]
+    #[Route('/test', name: 'test')]
     public function test(): Response
     {
         $reports = $this->reportRepository->countReports();
         dd($reports);
     }
     
-    #[Route('/report', name: 'report')]
+    #[Route('/report', name: 'report',methods: ['POST'])]
     public function report(Request $req): Response
     {
         $payload = json_decode($req->getContent(), false);
@@ -188,10 +188,10 @@ class BlogController extends AbstractController
             return $this->json("good",200);
         }
 
-        return $this->json("already reported", 200);
+        return $this->json("already reported", 201);
     }
     
-    #[Route('/{id}', name: '_show')]
+    #[Route('/{id}', name: 'show')]
     public function show($id): Response
     {
         $post = $this->postRepository->find($id);

@@ -226,3 +226,12 @@ input[type="file"] {
     margin-top: 5px;
     width: 50%
 }
+
+table,tr,td,th{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td,th{
+    padding: 2px;
+    text-align: center;
+}

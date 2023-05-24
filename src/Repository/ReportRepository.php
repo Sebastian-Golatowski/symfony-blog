@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Report;
+use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -54,12 +57,16 @@ class ReportRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countReports()
+    public function countReports($number)
     {
         $qb = $this->createQueryBuilder('r');
-        $qb ->select('IDENTITY(r.post) AS postId, COUNT(r) AS reportCount')
+        $qb ->select('IDENTITY(r.post) AS postId, COUNT(r) AS reportCount, p.title, u.username')
+            ->innerJoin(Post::class, 'p', 'WITH', 'r.post = p.id')
+            ->innerJoin(User::class , 'u' , 'WITH', 'p.user = u.id')
             ->groupBy('postId')
-            ->having('reportCount >= 1');
+            ->having('reportCount >= :number')
+            ->setParameter('number', $number)
+            ->OrderBy('reportCount','DESC');
     
         return $qb->getQuery()->getResult();
     }

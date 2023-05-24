@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Admin Panel{% endblock %}
 
 {% block body %}
+    {% include "admin/adminOptions.html.twig" %}
     {{form_start(form)}}
             {{form_widget(form)}}
             <button    
@@ -28,12 +28,19 @@
                         NO
                     {% endif %}
                 </td>
-                <td>under construction</td>
+                <td>
+                    {% if "ROLE_ADMIN" in user.roles %}
+                        <button onclick="changeStatus({{user.id}}, 'user')">'Promote' to User</button>
+                    {% else %}
+                        <button onclick="deleteAccount({{user.id}})">Delete Account</br>(with its posts)</button>
+                        <button onclick="changeStatus({{user.id}}, 'admin')">Promote to Admin</button>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
          </table>
         {{ knp_pagination_render(users) }} 
     {% else %}
-        <h1>There is no user with name containing "{{userName}}"</h1>
+        <h1>There are no users with name containing "{{userName}}"</h1>
     {% endif %}
 {% endblock %}
