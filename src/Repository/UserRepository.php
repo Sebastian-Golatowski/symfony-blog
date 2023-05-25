@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Report;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,8 +21,10 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    private $reportRepository;
+    public function __construct(EntityManagerInterface $em,ManagerRegistry $registry)
     {
+        $this->reportRepository = $em->getRepository(Report::class);
         parent::__construct($registry, User::class);
     }
 
@@ -35,11 +39,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function remove(User $entity, bool $flush = false): void
     {
+        $userId = $entity->getId();
+        $reports = $this->reportRepository->findBy(['user'=>$userId]);
+        foreach($reports as $report){
+            $this->reportRepository->remove($report,true);
+        }
+
         $this->getEntityManager()->remove($entity);
-        
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+
     }
 
     /**

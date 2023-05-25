@@ -36,6 +36,7 @@ class AdminController extends AbstractController
     #[Route('/', name: 'users')]
     public function showUsers(Request $req): Response
     {
+        $userId= $this->getUser()->getId();
         $form = $this->createForm(AdminUsersType::class);
 
         $page = $req->query->getInt('page', 1);
@@ -45,10 +46,16 @@ class AdminController extends AbstractController
         if($form->isSubmitted()){
             $userName = $form->get('userName')->getData();
             $users = $this->userRepository->likeUserName($userName);
+            $users = array_filter($users, static function ($user) use($userId) {
+                return $user->getId() !== $userId;
+            });
             $perPage = sizeof($users)+1;
         }
         else{
             $users = $this->userRepository->findAll();
+            $users = array_filter($users, static function ($user) use($userId) {
+                return $user->getId() !== $userId;
+            });
             $userName="";
         }
 
@@ -71,7 +78,7 @@ class AdminController extends AbstractController
     public function showReports(Request $req):Response
     {
 
-        $reports = $this->reportRepository->countReports(2);
+        $reports = $this->reportRepository->countReports(1);
         
         $page = $req->query->getInt('page', 1);
         $paginatedReports = $this->paginator->paginate(
@@ -92,8 +99,10 @@ class AdminController extends AbstractController
 
         if ($this->isGranted("ROLE_ADMIN")) {
             $user = $this->userRepository->find($userId);
-            
-
+            $posts = $this->postRepository->findBy(['user'=>$userId]);
+            foreach($posts as $post){
+                $this->postRepository->remove($post,true);
+            }
             $this->userRepository->remove($user, true);
 
             return $this->json("user deleted",200);
@@ -121,6 +130,20 @@ class AdminController extends AbstractController
                     $this->em->flush();
                 }
             }
+            return $this->json("ok", 200);
+        }
+    }
+
+    #[Route('/allowIt', name:"allowIt",methods: ['POST'])]
+    public function allowIt(Request $req): JsonResponse
+    {
+        $payload = json_decode($req->getContent(), false);
+        $postId = $payload->post;
+
+        if ($this->isGranted("ROLE_ADMIN")) {
+            $post = $this->postRepository->find($postId);
+            $this->postRepository->remove($post,true);
+
             return $this->json("ok", 200);
         }
     }

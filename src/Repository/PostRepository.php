@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\Report;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,9 +18,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $reportRepository;
+    public function __construct(EntityManagerInterface $em, ManagerRegistry $registry)
     {
+        $this->reportRepository = $em->getRepository(Report::class);
         parent::__construct($registry, Post::class);
+        
     }
 
     public function save(Post $entity, bool $flush = false): void
@@ -32,8 +37,13 @@ class PostRepository extends ServiceEntityRepository
 
     public function remove(Post $entity, bool $flush = false): void
     {
+        $postId = $entity->getId();
+        $reports = $this->reportRepository->findBy(['post'=>$postId]);
+        foreach($reports as $report){
+            $this->reportRepository->remove($report,true);
+        }
+        
         $this->getEntityManager()->remove($entity);
-
         if ($flush) {
             $this->getEntityManager()->flush();
         }

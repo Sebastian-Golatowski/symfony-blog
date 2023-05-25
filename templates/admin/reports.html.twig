@@ -16,8 +16,9 @@
                     <td>{{report.reportCount}}</td>
                     <td><a href="/blog/{{report.postId}}">view</a></td>
                     <td>
-                        {# <button onclick="changeStatus({{user.id}}, 'admin')">Delete post</button>
-                        <button onclick="changeStatus({{user.id}}, 'admin')">Ignore</button> #}
+                        <button onclick="deletePost()">Delete post+Author</button>
+                        <button onclick="deletePost()">Delete post</button>
+                        <button onclick="allowIt({{report.postId}})">i will allow it</button>
                     </td>
                 </tr>
             {% endfor %}

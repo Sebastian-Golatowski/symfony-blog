@@ -61,8 +61,8 @@ class BlogController extends AbstractController
             $fs = new Filesystem();
             $fs->remove($this->
                 getParameter('kernel.project_dir').'/public'.$post->getImg());
-            $this->em->remove($post);
-            $this->em->flush();
+                
+            $this->postRepository->remove($post,true);
         }
         
         return $this->redirectToRoute("blog_index");
@@ -159,13 +159,7 @@ class BlogController extends AbstractController
         return $this->redirectToRoute('blog_'.$origin,['id'=>$id]);
 
     }
-    #[Route('/test', name: 'test')]
-    public function test(): Response
-    {
-        $reports = $this->reportRepository->countReports();
-        dd($reports);
-    }
-    
+
     #[Route('/report', name: 'report',methods: ['POST'])]
     public function report(Request $req): Response
     {

@@ -1,3 +1,74 @@
+<script>
+    const reportPost = (postId, userId)=>{
+        fetch('http://127.0.0.1:8000/blog/report', {
+        method: 'POST',
+        body: JSON.stringify({post: postId, user: userId})
+        }).then(response => {
+        if(response.status ==200){
+            return alert("ok")
+        }
+        else if(response.status==201){
+            return alert("already reported")
+        }
+        else{
+            return alert("something went wrong, please try again later")
+        }
+        })
+    }
+
+    const deleteAccount = (userId)=>{
+        fetch('http://127.0.0.1:8000/admin/deleteAccount', {
+        method: 'POST',
+        body: JSON.stringify({user: userId})
+        }).then(response => {
+        if(response.status ==200){
+            location.reload()
+        }
+        else{
+            return alert("something went wrong, please try again later")
+        }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return alert("an error occurred, please try again later");
+        });
+    }
+
+    const changeStatus = (userId, toWhat) => {
+        fetch('http://127.0.0.1:8000/admin/changeStatus', {
+            method: 'POST',
+            body: JSON.stringify({user: userId, towhat: toWhat})
+        })
+        .then(response => {
+            if (response.status == 200) {
+                location.reload()
+            } else {
+                return alert("something went wrong, please try again later");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return alert("an error occurred, please try again later");
+        });
+    }
+    const allowIt = (postId) =>{
+        fetch('http://127.0.0.1:8000/admin/allowIt', {
+            method: 'POST',
+            body: JSON.stringify({post: postId})
+        })
+        .then(response => {
+            if (response.status == 200) {
+                location.reload()
+            } else {
+                return alert("something went wrong, please try again later");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return alert("an error occurred, please try again later");
+        });
+    }       
+</script>
 <h1>Admin Options</h1>
 <ol>
     <li><a href="/admin">users</a></li>
