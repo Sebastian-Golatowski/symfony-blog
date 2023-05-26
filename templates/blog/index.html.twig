@@ -1,7 +1,8 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-                {% for post in posts %}
+{% include "api/index.html.twig" %}
+        {% for post in posts %}
                 <div class="post">
                         <div class="photo"><img src="{{post.img}}" width="350" height="250"></div>
                         <div class="content">
@@ -11,11 +12,10 @@
                                         <h4><em>~ {{post.user.username}} ~</em></h4>
                                         <button class="more" onclick="location.href='/blog/{{post.id}}'" type="button">read more</button>
                                         {% if app.user %}
-                                                
                                                 {% if app.user.id == post.user.id %}
                                                         <button class="edit" onclick="location.href='/blog/edit/{{post.id}}/index'" type="button">edit</button>
                                                         <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
-                                                        
+                                                                
                                                 {% else %}
                                                         {% if is_granted('ROLE_ADMIN') %}
                                                                 <button class="delete" onclick="location.href='/blog/delete/{{post.id}}'" type="button">delete</button>
@@ -26,6 +26,6 @@
                                 </div>
                         </div>
                 </div>         
-                {% endfor %}
-        {{ knp_pagination_render(posts) }}        
+        {% endfor %}
+{{ knp_pagination_render(posts) }}        
 {% endblock %}

@@ -2,6 +2,7 @@
 {% block title %}Admin Panel{% endblock %}
 
 {% block body %}
+    {% include "api/index.html.twig" %}
     {% include "admin/adminOptions.html.twig" %}
     {{form_start(form)}}
             {{form_widget(form)}}

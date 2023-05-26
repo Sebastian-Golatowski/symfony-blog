@@ -160,30 +160,6 @@ class BlogController extends AbstractController
 
     }
 
-    #[Route('/report', name: 'report',methods: ['POST'])]
-    public function report(Request $req): Response
-    {
-        $payload = json_decode($req->getContent(), false);
-        // $userId = $payload->user;
-        $postId = $payload->post;
-
-        $user = $this->getUser();
-        $post = $this->postRepository->find($postId);
-
-        $reports = $this->reportRepository->isAlreadyReported($user->getId(), $postId);
-
-        if(sizeof($reports) == 0){
-            $newReport = new Report();
-            $newReport->setPost($post);
-            $newReport->setUser($user);
-            $this->em->persist($newReport);
-            $this->em->flush();
-
-            return $this->json("good",200);
-        }
-
-        return $this->json("already reported", 201);
-    }
     
     #[Route('/{id}', name: 'show')]
     public function show($id): Response

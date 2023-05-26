@@ -1,6 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+    {% include "api/index.html.twig" %}
     {% include "admin/adminOptions.html.twig" %}
     {% if reports|length != 0 %}
         <table>
