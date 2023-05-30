@@ -2,7 +2,8 @@
     const reportPost = (postId, userId)=>{
         fetch('http://127.0.0.1:8000/api/report', {
         method: 'POST',
-        body: JSON.stringify({post: postId, user: userId})
+        body: JSON.stringify({post: postId, 
+                            user: userId})
         }).then(response => {
         if(response.status ==200){
             return alert("ok")
@@ -31,13 +32,15 @@
         .catch(error => {
             console.error('Error:', error);
             return alert("an error occurred, please try again later");
-        });
+        }); 
+
     }
 
     const changeStatus = (userId, toWhat) => {
         fetch('http://127.0.0.1:8000/api/changeStatus', {
             method: 'POST',
-            body: JSON.stringify({user: userId, towhat: toWhat})
+            body: JSON.stringify({user: userId, 
+                                towhat: toWhat})
         })
         .then(response => {
             if (response.status == 200) {
@@ -62,6 +65,24 @@
             } else {
                 return alert("something went wrong, please try again later");
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return alert("an error occurred, please try again later");
+        });
+    }
+    const deletePost = (postId, owner)=>{
+        fetch('http://127.0.0.1:8000/api/deletePost', {
+        method: 'POST',
+        body: JSON.stringify({post: postId,
+                            owner:owner})
+        }).then(response => {
+        if(response.status ==200){
+            location.reload()
+        }
+        else{
+            return alert("something went wrong, please try again later")
+        }
         })
         .catch(error => {
             console.error('Error:', error);

@@ -37,13 +37,42 @@ class ApiController extends AbstractController
 
         if ($this->isGranted("ROLE_ADMIN")) {
             $user = $this->userRepository->find($userId);
-            $posts = $this->postRepository->findBy(['user'=>$userId]);
+            $posts = $user->getPosts();
             foreach($posts as $post){
                 $this->postRepository->remove($post,true);
             }
             $this->userRepository->remove($user, true);
 
             return $this->json("user deleted",200);
+        }
+        
+        return $this->json("u cant do that",201);
+    } 
+
+    #[Route('/deletePost', name:"deletePost",methods: ['POST'])]
+    public function deletePost(Request $req): JsonResponse
+    {
+        $payload = json_decode($req->getContent(), false);
+        $postId = $payload->post;
+        $owner = $payload->owner;
+
+        $post = $this->postRepository->find($postId);
+
+        if ($this->isGranted("ROLE_ADMIN")) {
+            if($owner == 'no'){
+                $this->postRepository->remove($post,true);
+                return $this->json("post deleted",200);
+            }
+            elseif($owner == 'yes'){
+                $user = $post->getUser();
+                $posts = $user->getPosts();
+                
+                foreach($posts as $post){
+                    $this->postRepository->remove($post,true);
+                }
+                $this->userRepository->remove($user, true);
+                return $this->json("post and user deleted",200);
+            }
         }
         
         return $this->json("u cant do that",201);
